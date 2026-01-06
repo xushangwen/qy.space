@@ -3,31 +3,43 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
+import { ShimmeringText } from "@/components/ui/shimmering-text";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import { getPosts } from "@/lib/actions/posts";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 每60秒重新验证一次
 
 export default async function HomePage() {
   const posts = await getPosts({ published: true, limit: 3 });
 
+  // 切换此变量来控制是否显示旧的背景效果
+  const useNewBackground = true;
+
   return (
     <div className="mx-auto max-w-5xl px-6">
       {/* Hero Section */}
-      <section className="relative flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
-        <BackgroundBeams className="-z-10" />
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+      <section className="relative z-0 flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
+        {useNewBackground ? (
+          <BackgroundRippleEffect />
+        ) : (
+          <BackgroundBeams className="-z-10" />
+        )}
+        
+        <h1 className="z-10 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
           Hi, I&apos;m{" "}
-          <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            QY
-          </span>
+          <ShimmeringText 
+            text="QiaoYa" 
+            className="font-bold" 
+            shimmerBy="text"
+          />
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+        <p className="z-10 mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
           设计师 / 开发者 / 创作者
           <br />
           记录设计思考与技术探索
         </p>
-        <div className="mt-10 flex gap-4">
+        <div className="z-10 mt-10 flex gap-4">
           <Button asChild size="lg">
             <Link href="/blog">
               浏览文章
@@ -75,7 +87,7 @@ export default async function HomePage() {
                         alt={post.title}
                         fill
                         className="object-cover"
-                        unoptimized
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     </div>
                   ) : (

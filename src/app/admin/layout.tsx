@@ -20,7 +20,7 @@ export default function AdminLayout({
         {/* Header */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6">
           <Link href="/admin" className="text-lg font-semibold">
-            QY.Space
+            QiaoYa.Space
           </Link>
           <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
             Admin

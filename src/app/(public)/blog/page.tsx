@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "所有文章",
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: 每60秒重新验证一次
 
 export default async function BlogPage() {
   const posts = await getPosts({ published: true });
@@ -44,7 +44,7 @@ export default async function BlogPage() {
                       alt={post.title}
                       fill
                       className="object-cover"
-                      unoptimized
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
                 ) : (

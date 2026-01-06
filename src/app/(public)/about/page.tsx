@@ -4,7 +4,7 @@ import { MarkdownRenderer } from "@/components/markdown-renderer";
 
 export const metadata: Metadata = {
   title: "关于",
-  description: "关于 QY.Studio",
+  description: "关于 QiaoYa.Studio",
 };
 
 export const dynamic = "force-dynamic";

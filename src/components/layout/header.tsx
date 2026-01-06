@@ -15,13 +15,13 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/20 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <Link
           href="/"
           className="text-xl font-semibold tracking-tight transition-colors hover:text-primary/80"
         >
-          QY.Space
+          QiaoYa.Space
         </Link>
 
         <nav className="flex items-center gap-6">

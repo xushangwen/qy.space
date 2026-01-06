@@ -88,7 +88,7 @@ export default async function PostPage({ params }: PostPageProps) {
               fill
               className="object-cover transition-transform duration-700 hover:scale-105"
               priority
-              unoptimized
+              sizes="(max-width: 896px) 100vw, 896px"
             />
           </div>
         </div>

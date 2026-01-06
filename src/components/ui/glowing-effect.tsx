@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { animate } from "motion/react";
 
@@ -16,6 +16,7 @@ interface GlowingEffectProps {
   movementDuration?: number;
   borderWidth?: number;
 }
+
 const GlowingEffect = memo(
   ({
     blur = 0,
@@ -30,93 +31,54 @@ const GlowingEffect = memo(
     disabled = true,
   }: GlowingEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const lastPosition = useRef({ x: 0, y: 0 });
-    const animationFrameRef = useRef<number>(0);
 
     const handleMove = useCallback(
-      (e?: MouseEvent | { x: number; y: number }) => {
-        if (!containerRef.current) return;
+      (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!containerRef.current || disabled) return;
 
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
+        const element = containerRef.current;
+        const { left, top, width, height } = element.getBoundingClientRect();
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
 
-        animationFrameRef.current = requestAnimationFrame(() => {
-          const element = containerRef.current;
-          if (!element) return;
+        const centerX = left + width * 0.5;
+        const centerY = top + height * 0.5;
+        
+        // 简单的距离检查，决定是否显示
+        element.style.setProperty("--active", "1");
 
-          const { left, top, width, height } = element.getBoundingClientRect();
-          const mouseX: number = "x" in (e || {}) ? (e as { x: number }).x : lastPosition.current.x;
-          const mouseY: number = "y" in (e || {}) ? (e as { y: number }).y : lastPosition.current.y;
+        const currentAngle =
+          parseFloat(element.style.getPropertyValue("--start")) || 0;
+        
+        let targetAngle =
+          (180 * Math.atan2(mouseY - centerY, mouseX - centerX)) /
+            Math.PI +
+          90;
 
-          if (e) {
-            lastPosition.current = { x: mouseX, y: mouseY };
-          }
+        const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
+        const newAngle = currentAngle + angleDiff;
 
-          const centerX = left + width * 0.5;
-          const centerY = top + height * 0.5;
-          const distanceFromCenter = Math.hypot(
-            mouseX - centerX,
-            mouseY - centerY
-          );
-          const inactiveRadius = 0.5 * Math.min(width, height) * inactiveZone;
-
-          if (distanceFromCenter < inactiveRadius) {
-            element.style.setProperty("--active", "0");
-            return;
-          }
-
-          const isActive =
-            mouseX > left - proximity &&
-            mouseX < left + width + proximity &&
-            mouseY > top - proximity &&
-            mouseY < top + height + proximity;
-
-          element.style.setProperty("--active", isActive ? "1" : "0");
-
-          if (!isActive) return;
-
-          const currentAngle =
-            parseFloat(element.style.getPropertyValue("--start")) || 0;
-          let targetAngle =
-            (180 * Math.atan2(mouseY - centerY, mouseX - centerX)) /
-              Math.PI +
-            90;
-
-          const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
-          const newAngle = currentAngle + angleDiff;
-
-          animate(currentAngle, newAngle, {
-            duration: movementDuration,
-            ease: [0.16, 1, 0.3, 1],
-            onUpdate: (value) => {
-              element.style.setProperty("--start", String(value));
-            },
-          });
+        // 使用 CSS 变量直接更新，避免大量 React 状态更新
+        animate(currentAngle, newAngle, {
+          duration: movementDuration,
+          ease: [0.16, 1, 0.3, 1],
+          onUpdate: (value) => {
+            element.style.setProperty("--start", String(value));
+          },
         });
       },
-      [inactiveZone, proximity, movementDuration]
+      [movementDuration, disabled]
     );
 
-    useEffect(() => {
-      if (disabled) return;
+    const handleLeave = useCallback(() => {
+      if (!containerRef.current) return;
+      containerRef.current.style.setProperty("--active", "0");
+    }, []);
 
-      const handleScroll = () => handleMove();
-      const handlePointerMove = (e: PointerEvent) => handleMove(e);
-
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      document.body.addEventListener("pointermove", handlePointerMove, {
-        passive: true,
-      });
-
-      return () => {
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
-        window.removeEventListener("scroll", handleScroll);
-        document.body.removeEventListener("pointermove", handlePointerMove);
-      };
-    }, [handleMove, disabled]);
+    const handleEnter = useCallback(() => {
+      if (!containerRef.current || disabled) return;
+      containerRef.current.style.setProperty("--active", "1");
+    }, [disabled]);
 
     return (
       <>
@@ -130,6 +92,9 @@ const GlowingEffect = memo(
         />
         <div
           ref={containerRef}
+          onMouseMove={handleMove}
+          onMouseLeave={handleLeave}
+          onMouseEnter={handleEnter}
           style={
             {
               "--blur": `${blur}px`,
@@ -160,7 +125,7 @@ const GlowingEffect = memo(
             } as React.CSSProperties
           }
           className={cn(
-            "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
+            "absolute inset-0 rounded-[inherit] opacity-100 transition-opacity", // 移除 pointer-events-none 以允许事件捕获
             glow && "opacity-100",
             blur > 0 && "blur-[var(--blur)] ",
             className,
