@@ -12,17 +12,15 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
 import { PostActions } from "@/components/admin/post-actions";
-import type { Post, Category } from "@prisma/client";
+import type { Post } from "@/lib/actions/posts";
 
 export const dynamic = "force-dynamic";
 
-type PostWithCategory = Post & { category: Category | null };
-
-async function getPosts(): Promise<PostWithCategory[]> {
+async function getPosts(): Promise<Post[]> {
   try {
     return await db.post.findMany({
       orderBy: { createdAt: "desc" },
-      include: { category: true },
+      include: { category: true, tags: true },
     });
   } catch {
     return [];
