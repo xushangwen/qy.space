@@ -45,10 +45,12 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tiptap-markdown": "^0.8.10",
-    "zod": "^4.3.5"
+    "zod": "^4.3.5",
+    "@prisma/client": "^7.2.0",
+    "@prisma/adapter-pg": "^7.2.0",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
-    "@prisma/client": "^7.2.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.16.0",
