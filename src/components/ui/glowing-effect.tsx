@@ -6,7 +6,6 @@ import { animate } from "motion/react";
 
 interface GlowingEffectProps {
   blur?: number;
-  inactiveZone?: number;
   proximity?: number;
   spread?: number;
   variant?: "default" | "white";
@@ -20,7 +19,6 @@ interface GlowingEffectProps {
 const GlowingEffect = memo(
   ({
     blur = 0,
-    inactiveZone = 0.7,
     proximity = 0,
     spread = 20,
     variant = "default",
