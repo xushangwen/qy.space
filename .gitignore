@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# Exclude parent directory files that cause build issues
+../package.json
+../package-lock.json
+../node_modules/
