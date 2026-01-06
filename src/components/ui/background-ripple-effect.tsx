@@ -9,7 +9,6 @@ interface BackgroundRippleEffectProps {
   cellClassName?: string;
   rows?: number;
   cols?: number;
-  cellSize?: number;
   hoverColor?: string;
   rippleColor?: string;
   gridColor?: string;
@@ -20,7 +19,6 @@ export const BackgroundRippleEffect = ({
   cellClassName,
   rows = 35,
   cols = 50,
-  cellSize = 56,
   hoverColor = "var(--primary)",
   rippleColor = "var(--primary)",
   gridColor = "border-border/50",
