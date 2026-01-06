@@ -9,7 +9,6 @@ interface BackgroundRippleEffectProps {
   cellClassName?: string;
   rows?: number;
   cols?: number;
-  hoverColor?: string;
   rippleColor?: string;
   gridColor?: string;
 }
@@ -19,7 +18,6 @@ export const BackgroundRippleEffect = ({
   cellClassName,
   rows = 35,
   cols = 50,
-  hoverColor = "var(--primary)",
   rippleColor = "var(--primary)",
   gridColor = "border-border/50",
 }: BackgroundRippleEffectProps) => {
@@ -55,7 +53,6 @@ export const BackgroundRippleEffect = ({
             className={cellClassName}
             clickedCell={clickedCell}
             setClickedCell={setClickedCell}
-            hoverColor={hoverColor}
             rippleColor={rippleColor}
             gridColor={gridColor}
           />
@@ -71,7 +68,6 @@ const Cell = ({
   className,
   clickedCell,
   setClickedCell,
-  hoverColor,
   rippleColor,
   gridColor,
 }: {
@@ -80,7 +76,6 @@ const Cell = ({
   className?: string;
   clickedCell: [number, number] | null;
   setClickedCell: (cell: [number, number] | null) => void;
-  hoverColor: string;
   rippleColor: string;
   gridColor: string;
 }) => {
