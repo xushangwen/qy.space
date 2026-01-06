@@ -12,10 +12,13 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
 import { PostActions } from "@/components/admin/post-actions";
+import type { Post, Category } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
-async function getPosts() {
+type PostWithCategory = Post & { category: Category | null };
+
+async function getPosts(): Promise<PostWithCategory[]> {
   try {
     return await db.post.findMany({
       orderBy: { createdAt: "desc" },
