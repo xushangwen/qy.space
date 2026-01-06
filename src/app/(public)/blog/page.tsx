@@ -34,8 +34,6 @@ export default async function BlogPage() {
                   spread={40}
                   glow={true}
                   disabled={false}
-                  proximity={64}
-                  inactiveZone={0.01}
                 />
                 {post.coverImage ? (
                   <div className="relative z-20 aspect-video w-full overflow-hidden rounded-md">
